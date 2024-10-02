@@ -40,9 +40,9 @@ pipeline {
     post {
         always {
             script {
-                // Capture the log and write it to a file using forward slashes
+                // Use getRawBuild() to capture the log
                 def logFile = "${env.WORKSPACE}/pipeline-log.txt"
-                writeFile file: logFile, text: currentBuild.getLog().join("\n")
+                writeFile file: logFile, text: currentBuild.rawBuild.getLog(1000).join("\n") // Captures the last 1000 lines
             }
             echo 'Pipeline complete.'
         }
@@ -52,7 +52,7 @@ pipeline {
             emailext to: 'andreiangeles738@gmail.com',
                      subject: "Jenkins Pipeline Success: ${env.JOB_NAME}",
                      body: "The Jenkins pipeline ${env.JOB_NAME} completed successfully. Logs are attached.",
-                     attachmentsPattern: "**/pipeline-log.txt"  // Use a GLOB pattern to match the file
+                     attachmentsPattern: "**/pipeline-log.txt"
         }
 
         failure {
@@ -60,7 +60,7 @@ pipeline {
             emailext to: 'andreiangeles738@gmail.com',
                      subject: "Jenkins Pipeline Failure: ${env.JOB_NAME}",
                      body: "The Jenkins pipeline ${env.JOB_NAME} failed. Logs are attached.",
-                     attachmentsPattern: "**/pipeline-log.txt"  // Use a GLOB pattern to match the file
+                     attachmentsPattern: "**/pipeline-log.txt"
         }
     }
 }
