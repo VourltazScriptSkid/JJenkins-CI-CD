@@ -40,9 +40,9 @@ pipeline {
     post {
         always {
             script {
-                // Capture the log and write it to a file
+                // Capture the console log in a file
                 def logFile = "${env.WORKSPACE}/pipeline-log.txt"
-                writeFile file: logFile, text: currentBuild.rawBuild.getLog().join("\n")
+                writeFile file: logFile, text: Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(env.BUILD_NUMBER).log
             }
             echo 'Pipeline complete.'
         }
@@ -52,7 +52,7 @@ pipeline {
             emailext to: 'andreiangeles738@gmail.com',
                      subject: "Jenkins Pipeline Success: ${env.JOB_NAME}",
                      body: "The Jenkins pipeline ${env.JOB_NAME} completed successfully. Logs are attached.",
-                     attachLog: true
+                     attachmentsPattern: "${env.WORKSPACE}/pipeline-log.txt"
         }
 
         failure {
@@ -60,8 +60,7 @@ pipeline {
             emailext to: 'andreiangeles738@gmail.com',
                      subject: "Jenkins Pipeline Failure: ${env.JOB_NAME}",
                      body: "The Jenkins pipeline ${env.JOB_NAME} failed. Logs are attached.",
-                     attachLog: true
+                     attachmentsPattern: "${env.WORKSPACE}/pipeline-log.txt"
         }
     }
 }
-
