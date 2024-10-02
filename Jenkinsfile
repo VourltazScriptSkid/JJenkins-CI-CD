@@ -49,18 +49,19 @@ pipeline {
 
         success {
             echo 'Pipeline succeeded!'
-            mail to: 'andreiangeles738@gmail.com',
-                 subject: "Jenkins Pipeline Success: ${env.JOB_NAME}",
-                 body: "The Jenkins pipeline ${env.JOB_NAME} completed successfully. Logs are attached.",
-                 attachmentsPattern: "${env.WORKSPACE}/pipeline-log.txt"
+            emailext to: 'andreiangeles738@gmail.com',
+                     subject: "Jenkins Pipeline Success: ${env.JOB_NAME}",
+                     body: "The Jenkins pipeline ${env.JOB_NAME} completed successfully. Logs are attached.",
+                     attachLog: true
         }
 
         failure {
             echo 'Pipeline failed!'
-            mail to: 'andreiangeles738@gmail.com',
-                 subject: "Jenkins Pipeline Failure: ${env.JOB_NAME}",
-                 body: "The Jenkins pipeline ${env.JOB_NAME} failed. Logs are attached.",
-                 attachmentsPattern: "${env.WORKSPACE}/pipeline-log.txt"
+            emailext to: 'andreiangeles738@gmail.com',
+                     subject: "Jenkins Pipeline Failure: ${env.JOB_NAME}",
+                     body: "The Jenkins pipeline ${env.JOB_NAME} failed. Logs are attached.",
+                     attachLog: true
         }
     }
 }
+
